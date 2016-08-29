@@ -1,0 +1,88 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <script src="script.js" type="text/javascript"></script>
+    <meta charset="UTF-8"> 
+</head>
+<body id="bod">
+    <span class="deviceHeader"> Vardagsrum </span>
+
+    <div class="deviceBox">
+        <div class="boxmiddle" onclick="addDeviceBox('header', 'subheader')"> 
+            <span><strong>Mitten</strong> <br /> nedanför </span>
+        </div>
+
+        <div class="boxleft"> 
+            <span><img src="naml.jpg" /></span>
+        </div>
+        
+        <div class="boxright"> 
+            <span>
+            <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onchange="test()" checked>
+                <label class="onoffswitch-label" for="myonoffswitch" ></label>
+            </div>
+            </span>
+        </div>
+    </div>
+
+    <div id="newSwitch" onclick="displayNew()">
+        <div style="display: table-cell; vertical-align: middle; font-size: 200%; cursor:pointer;">
+            +
+        </div>         
+    </div>
+
+    <div id="refresh">
+        <div style="display: table-cell; vertical-align: middle; font-size: 200%;  cursor:pointer;">
+            &#x21bb;
+        </div> 
+    </div>
+
+    <div id="newView">
+        <div id="newFormHolder">
+            <form>
+                <label for="in1">Name</label>
+                <input id="in1" type="text" name="name" placeholder="Bed light" class="forminput" />
+                
+                <label for="in2">Type</label>
+                <select id="in2" class="forminput">                    
+                    <option value="lamp">Lamp</option>
+                    <option value="wall_plug">Wall plug</option>
+                    <option value="wall_outlet">Wall outlet</option>
+                </select>
+
+                <label for="in3">Room #</label>
+                <input id="in3" type="text" name="name" placeholder="4" class="forminput" />
+
+                <label for="in4">Protocol</label>
+                <select id="in4" class="forminput" onchange="updateModels(this)">                    
+                    <option value="arctech">arctech</option>
+                    <option value="brateck">brateck</option>
+                    <option value="everflourish">everflourish</option>
+                    <option value="fuhaote">fuhaote</option>
+                    <option value="hasta">hasta</option>
+                    <option value="ikea">ikea</option>
+                    <option value="kangtai">kangtai</option>
+                    <option value="risingsun">risingsun</option>
+                    <option value="sartano">sartano</option>
+                    <option value="silvanchip">silvanchip</option>
+                    <option value="upm">upm</option>
+                    <option value="waveman">waveman</option>
+                    <option value="x10">x10</option>
+                    <option value="yidong">yidong </option>
+                </select>
+
+                <label for="in5">Model</label>
+                <select id="in5" class="forminput">                    
+                    <option value="pick">Pick a protocol</option>
+                </select>
+
+                
+                <label for="submitButton">&nbsp</label>
+                <input id="submitButton" type="submit" class="forminput" value="Send"/>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+    "id": 1,
+    "on": true,
+    "room": 1,
+    "name": "Device 1",
+    "type": "Wallplug",
+    "protocol": "arctech",
+    "model": "codeswitch",
+    "parameters": {
+        "house": "A",
+        "unit": 1
+    },
+    "timer": {
+        "enabled": false,
+        "start": "00:00:00",
+        "stop": "00:00:00"
+    }
+}
