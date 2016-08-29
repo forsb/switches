@@ -1,1 +1,1 @@
-'sudo apt-get install -y nodejs npm mongodb'
+'sudo apt-get install -y nodejs mongodb git'
