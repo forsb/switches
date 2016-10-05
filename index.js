@@ -1,8 +1,14 @@
 var express = require('express');
 var app = express();
 
+var path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 var mongodb = require('mongodb')
 var MongoClient = mongodb.MongoClient;
+
+
 
 var dburl = 'mongodb://localhost:27017/homer';
 
@@ -65,6 +71,8 @@ function dbupdate(collection, keydoc, fielddoc){
 
 function dbfind(collection, document){
 
+     var resstr = '{';
+
     MongoClient.connect(dburl, function (err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -76,27 +84,37 @@ function dbfind(collection, document){
             var col = db.collection(collection);
 
             // do some work here with the database.
-            var cursor = col.find(document);
+            var cursor = col.find(document);           
 
             //Lets iterate on the result
             cursor.each(function (err, doc) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('Fetched:', doc);
-            }
+                if (err) {
+                    console.log(err);
+                } else {
+                    resstr = resstr + doc + ',';
+                    //console.log('Fetched:', doc);
+                }
             });
             //Close connection
             db.close();
         }
     });
+
+    resstr = resstr + '}';
+    return resstr;
+    
 }
+
+app.get('/switches/', function(req, res){
+    res.sendFile(path.join(__dirname , 'public', 'index.html'));
+})
 
 
 //List all resources
 app.get('/resources/', function (req, res) {
-    dbfind('switches', {});
-    res.send('List all resources');
+    var response = dbfind('switches', {});
+    console.log('sending ' + response);
+    res.send(response);
 })
 
 //List a resource

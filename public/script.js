@@ -1,6 +1,6 @@
 function test(){
     //alert('element');
-    httpAsync('GET', 'https://fonts.googleapis.com/css?family=Roboto:300', null);
+    httpAsync('GET', 'http://192.168.43.92:8081/resources/', null);
 }
 
 function httpAsync(method, theUrl, params){
@@ -9,7 +9,7 @@ function httpAsync(method, theUrl, params){
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
             //success
-            document.getElementById('hejhopp').innerText = 'success';
+            /*document.getElementById('hejhopp').innerText = 'success';
 
             var dummyResponse = `
             {
@@ -23,8 +23,13 @@ function httpAsync(method, theUrl, params){
                     "unit": 1
                 }
             }`
+*/
+            console.log(this.responseText);
             //callback(xmlHttp.responseText);
+
+            //console.log('success');
         } else {
+            //console.log('fail');
             //fail
         }            
     }
