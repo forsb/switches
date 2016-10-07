@@ -1,37 +1,40 @@
 function test(){
     //alert('element');
-    httpAsync('GET', 'http://192.168.43.92:8081/resources/', null);
+    httpAsync('GET', 'http://192.168.1.132:8081/resources/', null);
+    //httpAsync('GET', 'https://fonts.googleapis.com/css?family=Dosis', null);
 }
 
 function httpAsync(method, theUrl, params){
     var xmlHttp = new XMLHttpRequest();
 
     xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
-            //success
-            /*document.getElementById('hejhopp').innerText = 'success';
+        if(xmlHttp.readyState == 4){
+                    
+            if (xmlHttp.status == 200){
+                //success
 
-            var dummyResponse = `
-            {
-                "id": 1
-                "name": "Device 1"
-                "type": "wallplug"
-                "protocol": "arctech"
-                "model": "codeswitch"
-                "parameters": {
-                    "house": "A"
-                    "unit": 1
-                }
-            }`
-*/
-            console.log(this.responseText);
-            //callback(xmlHttp.responseText);
+                /*document.getElementById('hejhopp').innerText = 'success';
 
-            //console.log('success');
-        } else {
-            //console.log('fail');
-            //fail
-        }            
+                var dummyResponse = `
+                {
+                    "id": 1
+                    "name": "Device 1"
+                    "type": "wallplug"
+                    "protocol": "arctech"
+                    "model": "codeswitch"
+                    "parameters": {
+                        "house": "A"
+                        "unit": 1
+                    }
+                }`
+                */
+    
+                console.log(this.responseText);
+            } else {
+                //fail
+                console.log('http request failed: ' + xmlHttp.status);
+            }  
+        }          
     }
 
     xmlHttp.open(method, theUrl, true); // true for asynchronous 

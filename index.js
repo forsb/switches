@@ -1,71 +1,35 @@
 var express = require('express');
-var app = express();
-
 var path = require('path');
+var mongodb = require('mongodb');
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-var mongodb = require('mongodb')
+var app = express();
 var MongoClient = mongodb.MongoClient;
 
-
-
-
 var dburl = 'mongodb://localhost:27017/homer';
-var connection = MongoClient.connect(dburl);
 
 var db;
 
-// Connect to the database before starting the application server.
+//Serve all files in the /public folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+//Connect to the database before starting the application server.
 mongodb.MongoClient.connect(dburl, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
     }
 
-    // Save database object from the callback for reuse.
+    //Save database object from the callback for reuse.
     db = database;
     console.log("Database connection ready");
 
-    // Initialize the app.
+    //Initialize the app.
     var server = app.listen(8081, function () {
         var host = server.address().address;
         var port = server.address().port;
         console.log("Example app listening at http://%s:%s", host, port);
-
-    });
-    
+    })
 });
-
-function dbupdate(collection, keydoc, fielddoc){
-
-    MongoClient.connect(dburl, function (err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            //HURRAY!! We are connected. :)
-            console.log('Connection established to', dburl);
-
-            // Get the documents collection
-            var col = db.collection(collection);
-
-            // do some work here with the database.
-            //collection.update({mykey:1}, {$set:{fieldtoupdate:2}}, {w:1}, function(err, result) {});
-            col.update(keydoc, fielddoc, function (err, result) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    //console.log('modified %d documents in the ' + collection + ' collection.', result.result.nModified);
-                    console.log('modified %d documents in the ' + collection + ' collection. Failure:', result.result.nModified, result.message.queryFailure, result.message.numberReturned);
-                    //console.log(result.connection);
-                }
-            });
-    
-            //Close connection
-            db.close();
-        }
-    });
-}
 
 //Send index.html
 app.get('/switches/', function (req, res) {
@@ -146,3 +110,35 @@ app.delete('/resources/:id', function (req, res) {
     }
    
 })
+
+
+
+function dbupdate(collection, keydoc, fielddoc){
+
+    MongoClient.connect(dburl, function (err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+            //HURRAY!! We are connected. :)
+            console.log('Connection established to', dburl);
+
+            // Get the documents collection
+            var col = db.collection(collection);
+
+            // do some work here with the database.
+            //collection.update({mykey:1}, {$set:{fieldtoupdate:2}}, {w:1}, function(err, result) {});
+            col.update(keydoc, fielddoc, function (err, result) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    //console.log('modified %d documents in the ' + collection + ' collection.', result.result.nModified);
+                    console.log('modified %d documents in the ' + collection + ' collection. Failure:', result.result.nModified, result.message.queryFailure, result.message.numberReturned);
+                    //console.log(result.connection);
+                }
+            });
+    
+            //Close connection
+            db.close();
+        }
+    });
+}
