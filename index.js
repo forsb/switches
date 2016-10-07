@@ -10,34 +10,24 @@ var MongoClient = mongodb.MongoClient;
 
 
 
+
 var dburl = 'mongodb://localhost:27017/homer';
+var connection = MongoClient.connect(dburl);
 
-function dbinsert(collection, document){
+var db;
 
-    MongoClient.connect(dburl, function (err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            //HURRAY!! We are connected. :)
-            console.log('Connection established to', dburl);
+// Connect to the database before starting the application server.
+mongodb.MongoClient.connect(dburl, function (err, database) {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
 
-            // Get the documents collection
-            var col = db.collection(collection);
+  // Save database object from the callback for reuse.
+  db = database;
+  console.log("Database connection ready");
 
-            // do some work here with the database.
-            col.insert(document, function (err, result) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('Inserted %d documents into the "users" collection. The documents inserted with "_id" are:', result.insertedCount, result);
-                }
-            });
-    
-            //Close connection
-            db.close();
-        }
-    });
-}
+});
 
 function dbupdate(collection, keydoc, fielddoc){
 
@@ -69,53 +59,18 @@ function dbupdate(collection, keydoc, fielddoc){
     });
 }
 
-function dbfind(collection, document){
-
-     var resstr = '{';
-
-    MongoClient.connect(dburl, function (err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            //HURRAY!! We are connected. :)
-            console.log('Connection established to', dburl);
-
-            // Get the documents collection
-            var col = db.collection(collection);
-
-            // do some work here with the database.
-            var cursor = col.find(document);           
-
-            //Lets iterate on the result
-            cursor.each(function (err, doc) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    resstr = resstr + doc + ',';
-                    //console.log('Fetched:', doc);
-                }
-            });
-            //Close connection
-            db.close();
-        }
-    });
-
-    resstr = resstr + '}';
-    return resstr;
-    
-}
-
+//Send index.html
 app.get('/switches/', function(req, res){
     res.sendFile(path.join(__dirname , 'public', 'index.html'));
 })
 
-
 //List all resources
-app.get('/resources/', function (req, res) {
-    var response = dbfind('switches', {});
-    console.log('sending ' + response);
-    res.send(response);
-})
+app.get('/resources/', function(req,res){
+    db.collection('switches').find({}).toArray().then(function (docs) {
+        console.log(docs);
+        res.send(docs);
+    });
+});
 
 //List a resource
 app.get('/resources/:id', function (req, res) {
