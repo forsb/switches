@@ -18,15 +18,23 @@ var db;
 
 // Connect to the database before starting the application server.
 mongodb.MongoClient.connect(dburl, function (err, database) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
+    if (err) {
+        console.log(err);
+        process.exit(1);
+    }
 
-  // Save database object from the callback for reuse.
-  db = database;
-  console.log("Database connection ready");
+    // Save database object from the callback for reuse.
+    db = database;
+    console.log("Database connection ready");
 
+    // Initialize the app.
+    var server = app.listen(8081, function () {
+        var host = server.address().address;
+        var port = server.address().port;
+        console.log("Example app listening at http://%s:%s", host, port);
+
+    });
+    
 });
 
 function dbupdate(collection, keydoc, fielddoc){
@@ -60,12 +68,12 @@ function dbupdate(collection, keydoc, fielddoc){
 }
 
 //Send index.html
-app.get('/switches/', function(req, res){
+app.get('/switches/', function (req, res) {
     res.sendFile(path.join(__dirname , 'public', 'index.html'));
-})
+});
 
 //List all resources
-app.get('/resources/', function(req,res){
+app.get('/resources/', function (req,res) {
     db.collection('switches').find({}).toArray().then(function (docs) {
         console.log(docs);
         res.send(docs);
@@ -137,15 +145,4 @@ app.delete('/resources/:id', function (req, res) {
         res.status(400).send('id ' + id + ' NaN\n');        
     }
    
-})
-
-
-
-var server = app.listen(8081, function () {
-
-  var host = server.address().address
-  var port = server.address().port
-
-  console.log("Example app listening at http://%s:%s", host, port)
-
 })
