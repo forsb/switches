@@ -9,6 +9,9 @@ var dburl = 'mongodb://localhost:27017/homer';
 
 var db;
 
+//TODO:
+//Error handling
+
 //Serve all files in the /public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -46,15 +49,18 @@ app.get('/resources/', function (req,res) {
 
 //List a resource
 app.get('/resources/:id', function (req, res) {
-    var id = req.params.id;
-
-    if(!isNaN(id)){
-        res.send('List resource ' + id + '\n');
+    var resid = req.params.id;
+    
+    if(!isNaN(resid)){
+        db.collection('switches').find({id: parseInt(resid)}).toArray().then(function (docs) {
+            console.log(docs);
+            res.send(docs);
+        });
     }
     else{
-        res.status(400).send('id ' + id + ' NaN\n');        
-    }
-})
+        res.status(400).send(resid + ' NaN\n');        
+    }    
+});
 
 //Replace entire collection
 app.put('/resources/', function (req, res) {
