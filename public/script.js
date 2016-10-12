@@ -1,6 +1,7 @@
 function test(){
     //alert('element');
-    httpAsync('GET', 'http://192.168.1.132:8081/resources/', null);
+    //httpAsync('GET', 'http://192.168.1.132:8081/resources/', null);
+    httpAsync('GET', 'http://' + window.location.hostname + ':8081/resources/', null);
     //httpAsync('GET', 'https://fonts.googleapis.com/css?family=Dosis', null);
 }
 
