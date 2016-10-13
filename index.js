@@ -1,6 +1,8 @@
 var express = require('express');
 var path = require('path');
 var mongodb = require('mongodb');
+var bodyParser = require('body-parser')
+
 
 var app = express();
 var MongoClient = mongodb.MongoClient;
@@ -11,6 +13,11 @@ var db;
 
 //TODO:
 //Error handling
+
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
 //Serve all files in the /public folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -62,13 +69,12 @@ app.get('/resources/:id', function (req, res) {
     }    
 });
 
-//Replace entire collection
+//TODO Replace entire collection
 app.put('/resources/', function (req, res) {
-    res.send('Replace entire collection');
-   
-})
+    res.send('Replace entire collection');   
+});
 
-//Replace a resource
+//TODO Replace a resource
 app.put('/resources/:id', function (req, res) {
     var id = req.params.id;
     var body = req.body;
@@ -80,31 +86,29 @@ app.put('/resources/:id', function (req, res) {
     }
     else{
         res.status(400).send('id ' + id + ' NaN\n');        
-    }
-    
-   
-})
+    }   
+});
 
-//Create a new resource in the collection, return id
+//Create a new resource in the collection
 app.post('/resources/', function (req, res) {
-    dbinsert('switches', {name:'apapapa'});
-    res.send('Create new resource\n');
-   
-})
+    db.collection('switches').insert(req.body).then(function (docs){
+        console.log(docs);
+        res.send(docs.ops);
+    });    
+});
 
 //Not used, create a collection inside resource
 app.post('/resources/:id', function (req, res) {
-    res.status(400).send('Functionality not used\n');
-   
-})
+    res.status(400).send('Functionality not used\n');   
+});
 
 //Not used, delete entire collection
 app.delete('/resources/', function (req, res) {
     res.status(400).send('Functionality not used\n');
    
-})
+});
 
-//Delete resource
+//TODO Delete resource
 app.delete('/resources/:id', function (req, res) {
     var id = req.params.id;
 
@@ -115,7 +119,7 @@ app.delete('/resources/:id', function (req, res) {
         res.status(400).send('id ' + id + ' NaN\n');        
     }
    
-})
+});
 
 
 
