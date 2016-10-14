@@ -108,12 +108,15 @@ app.delete('/resources/', function (req, res) {
    
 });
 
-//TODO Delete resource
+//Delete resource
 app.delete('/resources/:id', function (req, res) {
-    var id = req.params.id;
+    var resid = req.params.id;
 
-    if(!isNaN(id)){
-         res.send('Delete resource ' + id + '\n');
+    if(!isNaN(resid)){
+        db.collection('switches').remove({id:parseInt(resid)}).then(function (docs){
+            console.log(docs.result);
+            res.send(docs.result);
+        }); 
     }
     else{
         res.status(400).send('id ' + id + ' NaN\n');        
