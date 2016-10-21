@@ -1,11 +1,23 @@
 function test(){
     //alert('element');
     //httpAsync('GET', 'http://192.168.1.132:8081/resources/', null);
-    httpAsync('GET', 'http://' + window.location.hostname + ':8081/resources/', null);
+    //httpAsync('GET', 'http://' + window.location.hostname + ':8081/resources/', null, null);
     //httpAsync('GET', 'https://fonts.googleapis.com/css?family=Dosis', null);
 }
 
-function httpAsync(method, theUrl, params){
+function loadContent(){
+    httpAsync('GET', 'http://' + window.location.hostname + ':8081/resources/', null, function (response){
+        //alert(response);
+        response = JSON.parse(response);
+        for(i in response){
+            addDeviceBox(response[i].first, response[i].second, response[i]._id);
+        }
+    });
+}
+
+
+
+function httpAsync(method, theUrl, params, callback){
     var xmlHttp = new XMLHttpRequest();
 
     xmlHttp.onreadystatechange = function() { 
@@ -31,6 +43,7 @@ function httpAsync(method, theUrl, params){
                 */
     
                 console.log(this.responseText);
+                callback(this.responseText);
             } else {
                 //fail
                 console.log('http request failed: ' + xmlHttp.status);
@@ -42,8 +55,8 @@ function httpAsync(method, theUrl, params){
     xmlHttp.send(params);
 }
 
-function addDeviceBox(header, subheader) {
-    var uid = Math.floor(Math.random() * 10000) + 1  
+function addDeviceBox(header, subheader, uid) {
+    //var uid = Math.floor(Math.random() * 10000) + 1  
     var devicebox = document.createElement("div");
     devicebox.className = "deviceBox";
 
