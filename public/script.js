@@ -100,11 +100,22 @@ google.charts.setOnLoadCallback(drawBackgroundColor);
 
 function drawBackgroundColor() {
       var data = new google.visualization.DataTable();
-      data.addColumn('number', 'X');
+      data.addColumn('timeofday', 'X');
       data.addColumn('number', 'Dogs');
 
       data.addRows([
-        [0, 0],   [1, 10],  [2, 23],  [3, 17],  [4, 18],  [5, 9],
+        [[8, 30, 0], 5],
+        [[9, 0, 0], 10],
+        [[10, 0, 0, 0], 12],
+        [[10, 45, 0, 0], 13],
+        [[11, 0, 0, 0], 15],
+        [[12, 15, 45, 0], 20],
+        [[13, 0, 0, 0], 22],
+        [[14, 30, 0, 0], 25],
+        [[15, 12, 0, 0], 30],
+        [[16, 45, 0], 32],
+        [[16, 59, 0], 42]
+        /*[0, 0],   [1, 10],  [2, 23],  [3, 17],  [4, 18],  [5, 9],
         [6, 11],  [7, 27],  [8, 33],  [9, 40],  [10, 32], [11, 35],
         [12, 30], [13, 40], [14, 42], [15, 47], [16, 44], [17, 48],
         [18, 52], [19, 54], [20, 42], [21, 55], [22, 56], [23, 57],
@@ -115,23 +126,24 @@ function drawBackgroundColor() {
         [48, 72], [49, 68], [50, 66], [51, 65], [52, 67], [53, 70],
         [54, 71], [55, 72], [56, 73], [57, 75], [58, 70], [59, 68],
         [60, 64], [61, 60], [62, 65], [63, 67], [64, 68], [65, 69],
-        [66, 70], [67, 72], [68, 75], [69, 80]
+        [66, 70], [67, 72], [68, 75], [69, 80]*/
       ]);
 
       var options = {
         hAxis: {
           title: '',
-          baselineColor: '#CCCCCC'
+          baselineColor: '#CCCCCC',
+          textPosition: 'in'
         },
         vAxis: {
           title: '',
           baselineColor: '#CCCCCC'
         },
-        labels: 'none',
+        
         width: '50%',
         height: '100%',
         backgroundColor: { fill:'transparent' },
-        chartArea: {'width': '85%', 'height': '80%'},
+        chartArea: {'width': '85%', 'height': '85%'},
         legend: 'none',
       };
 
