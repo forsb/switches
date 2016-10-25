@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var mongodb = require('mongodb');
 var bodyParser = require('body-parser')
+var spawn = require('child_process').spawn;
 
 
 var app = express();
@@ -33,12 +34,28 @@ mongodb.MongoClient.connect(dburl, function (err, database) {
     db = database;
     console.log("Database connection ready");
 
+    //Spawn rf listener
+    var ls = spawn('./rf/a.out', []);
+
+    ls.stdout.on('data', function (data) {
+        console.log('stdout: ' + data );
+    });
+
+    ls.stderr.on('data', function (data) {
+        console.log('stderr: ' + data);
+    });
+
+    ls.on('close', function (code) {
+        console.log('child process exited with code ' + code);
+    });
+
+
     //Initialize the app.
     var server = app.listen(8081, function () {
         var host = server.address().address;
         var port = server.address().port;
         console.log("Example app listening at http://%s:%s", host, port);
-    })
+    });
 });
 
 //Send index.html
