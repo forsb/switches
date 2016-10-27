@@ -5,3 +5,7 @@ jspm_packages
 # Log files
 *.log
 *.csv
+
+#binaries
+*.o
+*.so*
