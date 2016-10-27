@@ -25,12 +25,13 @@ int main() {
     fflush(stdout);
     sleep(3);
     printf("minimajs");
-
+    fflush(stdout);
     radio.openWritingPipe(pipes[1]);
     radio.openReadingPipe(1,pipes[0]);
     radio.startListening();
+    while(1){
 
-if ( radio.available() )
+		if ( radio.available() )
 			{
 				// Dump the payloads until we've gotten everything
 				unsigned long got_time;
@@ -51,5 +52,6 @@ if ( radio.available() )
 
 				delay(925); //Delay after payload responded to, minimize RPi CPU time
 			}
+    }
     return 0;
 }
