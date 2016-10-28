@@ -17,8 +17,9 @@ RF24 radio(RPI_V2_GPIO_P1_15, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ);
 
 
 // Radio pipe addresses for the 2 nodes to communicate.
-const uint8_t pipes[][6] = {"1Node","2Node"};
+//const uint8_t pipes[][6] = {"1Node","2Node"};
 //const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };
+const uint64_t piper = 0xADADADADE1LL;
 
 int main() {
     printf("apapapa");
@@ -26,30 +27,28 @@ int main() {
     sleep(3);
     printf("minimajs");
     fflush(stdout);
-    radio.openWritingPipe(pipes[1]);
-    radio.openReadingPipe(1,pipes[0]);
+
+	radio.begin();
+	radio.enableDynamicPayloads();
+	radio.setAutoAck(1);
+	radio.setRetries(15,15);
+	radio.setDataRate(RF24_250KBPS);
+	radio.setPALevel(RF24_PA_MAX);
+	radio.setChannel(76);
+	radio.setCRCLength(RF24_CRC_8);
+
+	radio.openReadingPipe(1,piper);
     radio.startListening();
+
+	radio.printDetails();
+
+	char receivePayload[10];
     while(1){
 
 		if ( radio.available() )
 			{
-				// Dump the payloads until we've gotten everything
-				unsigned long got_time;
-
-
-				// Fetch the payload, and see if this was the last one.
-				radio.read( &got_time, sizeof(unsigned long) );
-
-				radio.stopListening();
-
-				radio.write( &got_time, sizeof(unsigned long) );
-
-				// Now, resume listening so we catch the next packets.
-				radio.startListening();
-
-				// Spew it
-				printf("Got payload(%d) %lu...\n",sizeof(unsigned long), got_time);
-
+				radio.read(receivePayload, sizeof(receivePayload));
+				printf("Recv: payload=%s\n", receivePayload);
 				delay(925); //Delay after payload responded to, minimize RPi CPU time
 			}
     }
