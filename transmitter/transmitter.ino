@@ -18,6 +18,8 @@
 #include <avr/sleep.h>
 #include <avr/power.h>
 
+#include "transmitter.h"
+
 #define CE_PIN      9
 #define CSN_PIN     4
 #define BUTTON_PIN  2
@@ -25,7 +27,10 @@
 
 //const uint64_t pipe = 0xF0F0F0F0E1LL; // Define the transmit pipe
 const uint64_t pipe = 0xADADADADE1LL;
-char message[] = "buttonMox";
+//char message[] = "buttonMox";
+SensorPayload message;
+
+uint16_t packageCount = 0;
 
 RF24 radio(CE_PIN, CSN_PIN); // Create a Radio
 
@@ -43,7 +48,7 @@ void setup() {
   radio.setChannel(76);
   radio.setCRCLength(RF24_CRC_8); 
 
-  
+  message.sensorId = 1;
 
   //delay(100);
 
@@ -52,9 +57,11 @@ void setup() {
 
 void loop() {  
   //enterSleep();
-  radio.write( message, sizeof(message) );
+  message.packageCount = 1337;
+  message.sensorValue.powerTemp.temp = 12345;
+  radio.write( &message, sizeof(message) );
 
-  delay(50);
+  delay(500);
   //Serial.println(message);
 }
 

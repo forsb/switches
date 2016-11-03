@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <RF24/RF24.h>
 
+#include "../transmitter/transmitter.h"
+
 using namespace std;
 
 // CE Pin, CSN Pin, SPI Speed
@@ -24,11 +26,11 @@ RF24 radio(RPI_V2_GPIO_P1_18, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ);
 const uint64_t piper = 0xADADADADE1LL;
 
 int main() {
-    printf("apapapa");
+    /*printf("apapapa");
     fflush(stdout);
     sleep(3);
     printf("minimajs");
-    fflush(stdout);
+    fflush(stdout);*/
 
 	radio.begin();
 	radio.enableDynamicPayloads();
@@ -44,14 +46,16 @@ int main() {
 
 	radio.printDetails();
 
-	char receivePayload[10];
+	SensorPayload receivePayload;
+	//char receivePayload[10];
     while(1){
 
 		if ( radio.available() )
 			{
-				radio.read(receivePayload, sizeof(receivePayload));
-				printf("Recv: payload=%s\n", receivePayload);
-				delay(925); //Delay after payload responded to, minimize RPi CPU time
+				radio.read(&receivePayload, sizeof(receivePayload));
+				printf("Recv: payload number %u from %d \n", receivePayload.packageCount ,receivePayload.sensorId);
+				fflush(stdout);
+				delay(100); //Delay after payload responded to, minimize RPi CPU time
 			}
     }
     return 0;
