@@ -1,1 +1,1 @@
-sudo apt-get install -y nodejs mongodb npm
+sudo apt-get install -y build-essential nodejs mongodb npm
