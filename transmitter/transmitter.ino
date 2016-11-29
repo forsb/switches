@@ -11,19 +11,21 @@
 
 //nRF24L01
 #include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
+#include "RF24.h"
 
 //Sleep
 #include <avr/sleep.h>
 #include <avr/power.h>
 
 #include "transmitter.h"
+#include "dht.h"
 
 #define CE_PIN      9
 #define CSN_PIN     4
 #define BUTTON_PIN  2
 #define LED_PIN    10
+#define DHT_PIN     3
+#define DHT_POW_PIN 7
 
 //const uint64_t pipe = 0xF0F0F0F0E1LL; // Define the transmit pipe
 const uint64_t pipe = 0xADADADADE1LL;
