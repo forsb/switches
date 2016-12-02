@@ -1,14 +1,15 @@
 var express = require('express');
 var path = require('path');
-var mongodb = require('mongodb');
-var bodyParser = require('body-parser')
+//var mongodb = require('mongodb');
+var database = require('./database')
+var bodyParser = require('body-parser');
 var spawn = require('child_process').spawn;
 
 
 var app = express();
 var MongoClient = mongodb.MongoClient;
 
-var dburl = 'mongodb://localhost:27017/homer';
+//var dburl = 'mongodb://localhost:27017/homer';
 
 var db;
 
@@ -24,14 +25,15 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Connect to the database before starting the application server.
-mongodb.MongoClient.connect(dburl, function (err, database) {
+// mongodb.MongoClient.connect(dburl, function (err, database) {
+database.connect(dburl, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
     }
 
     //Save database object from the callback for reuse.
-    db = database;
+    //db = database;
     console.log("Database connection ready");
 
     //Spawn rf listener
@@ -65,10 +67,15 @@ app.get('/switches/', function (req, res) {
 
 //List all resources
 app.get('/resources/', function (req,res) {
-    db.collection('switches').find({}).toArray().then(function (docs) {
+    database.find(query, function(docs){
         console.log(docs);
         res.send(docs);
     });
+    
+    // db.collection('switches').find({}).toArray().then(function (docs) {
+    //     console.log(docs);
+    //     res.send(docs);
+    // });
 });
 
 //List a resource
@@ -143,32 +150,32 @@ app.delete('/resources/:id', function (req, res) {
 
 
 
-function dbupdate(collection, keydoc, fielddoc){
+// function dbupdate(collection, keydoc, fielddoc){
 
-    MongoClient.connect(dburl, function (err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            //HURRAY!! We are connected. :)
-            console.log('Connection established to', dburl);
+//     MongoClient.connect(dburl, function (err, db) {
+//         if (err) {
+//             console.log('Unable to connect to the mongoDB server. Error:', err);
+//         } else {
+//             //HURRAY!! We are connected. :)
+//             console.log('Connection established to', dburl);
 
-            // Get the documents collection
-            var col = db.collection(collection);
+//             // Get the documents collection
+//             var col = db.collection(collection);
 
-            // do some work here with the database.
-            //collection.update({mykey:1}, {$set:{fieldtoupdate:2}}, {w:1}, function(err, result) {});
-            col.update(keydoc, fielddoc, function (err, result) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    //console.log('modified %d documents in the ' + collection + ' collection.', result.result.nModified);
-                    console.log('modified %d documents in the ' + collection + ' collection. Failure:', result.result.nModified, result.message.queryFailure, result.message.numberReturned);
-                    //console.log(result.connection);
-                }
-            });
+//             // do some work here with the database.
+//             //collection.update({mykey:1}, {$set:{fieldtoupdate:2}}, {w:1}, function(err, result) {});
+//             col.update(keydoc, fielddoc, function (err, result) {
+//                 if (err) {
+//                     console.log(err);
+//                 } else {
+//                     //console.log('modified %d documents in the ' + collection + ' collection.', result.result.nModified);
+//                     console.log('modified %d documents in the ' + collection + ' collection. Failure:', result.result.nModified, result.message.queryFailure, result.message.numberReturned);
+//                     //console.log(result.connection);
+//                 }
+//             });
     
-            //Close connection
-            db.close();
-        }
-    });
-}
+//             //Close connection
+//             db.close();
+//         }
+//     });
+// }

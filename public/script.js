@@ -15,7 +15,9 @@ function loadContent(){
     });
 }
 
-
+function getCurrentData(){
+    httpAsync('GET', 'http://' + window.location.hostname + ':8081/resources/')
+}
 
 function httpAsync(method, theUrl, params, callback){
     var xmlHttp = new XMLHttpRequest();
