@@ -1,15 +1,15 @@
 var express = require('express');
 var path = require('path');
 //var mongodb = require('mongodb');
-var database = require('./database')
+var database = require('./database');
 var bodyParser = require('body-parser');
 var spawn = require('child_process').spawn;
 
 
 var app = express();
-var MongoClient = mongodb.MongoClient;
+//var MongoClient = mongodb.MongoClient;
 
-//var dburl = 'mongodb://localhost:27017/homer';
+var dburl = 'mongodb://localhost:27017/homer';
 
 var db;
 
