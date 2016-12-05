@@ -7,7 +7,7 @@ function DBClient(url){
 }
 
 function connect(url, callback){
-    mongodb.MongoClient.connect(dburl, function(err, database){
+    mongodb.MongoClient.connect(url, function(err, database){
         this.db = database;
         callback(err, database);
     });
