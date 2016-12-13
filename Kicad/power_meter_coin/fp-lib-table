@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name power_meter_coin)(type KiCad)(uri "$(KIPRJMOD)")(options "")(descr ""))
-)
