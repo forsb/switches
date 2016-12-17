@@ -24,6 +24,7 @@ RF24 radio(RPI_V2_GPIO_P1_18, RPI_V2_GPIO_P1_24, BCM2835_SPI_SPEED_8MHZ);
 //const uint8_t pipes[][6] = {"1Node","2Node"};
 //const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };
 const uint64_t piper = 0xADADADADE1LL;
+uint8_t message[9];
 
 int main() {
     /*printf("apapapa");
@@ -46,17 +47,29 @@ int main() {
 
 	radio.printDetails();
 
-	SensorPayload receivePayload;
+	//SensorPayload receivePayload;
 	//char receivePayload[10];
     while(1){
-
-		if ( radio.available() )
-			{
-				radio.read(&receivePayload, sizeof(receivePayload));
-				printf("Recv: payload number %u from %d \n", receivePayload.packageCount ,receivePayload.sensorId);
-				fflush(stdout);
-				delay(100); //Delay after payload responded to, minimize RPi CPU time
-			}
+		if (radio.available()) {
+			radio.read(&message, sizeof(message));
+		    uint8_t* sensorId = &message[0];
+		    uint16_t* packageCount = (uint16_t*) &message[1];
+		    int16_t* temp = (int16_t*) &message[3];
+		    int16_t* humid = (int16_t*) &message[5];
+		    uint16_t* blinkCount = (uint16_t*) &message[7];
+			
+			/*uint8_t sensorId = message[0];
+			int16_t packageCount = (message[1] << 8) | message[2];
+			int16_t temp = (message[3] << 8) | message[4];
+			int16_t humid = (message[5] << 8) | message[6];
+			int16_t blinkCount = (message[7] << 8) | message[8];
+*/
+			printf("Recv: payload number %u from %d \n", *packageCount ,*sensorId);
+			printf("temp: %d, humid: %d, blink: %d\n", *temp, *humid, *blinkCount);
+			fflush(stdout);
+			delay(10); //Delay after payload responded to, minimize RPi CPU time
+		}
     }
+
     return 0;
 }
