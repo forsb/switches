@@ -19,7 +19,7 @@ var db;
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
-})); 
+}));
 
 //Serve all files in the /public folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -41,6 +41,9 @@ database.connect(dburl, function (err, database) {
 
     ls.stdout.on('data', function (data) {
         console.log('stdout: ' + data );
+        data = '{"sensorId": 1, "packageCount": 1337, "temp": 23.40, "humidity": 87.60, "blinkCount": 1337}';
+	      jsonResponse = json.parse(data);
+
     });
 
     ls.stderr.on('data', function (data) {
@@ -71,7 +74,7 @@ app.get('/resources/', function (req,res) {
         console.log(docs);
         res.send(docs);
     });
-    
+
     // db.collection('switches').find({}).toArray().then(function (docs) {
     //     console.log(docs);
     //     res.send(docs);
@@ -81,7 +84,7 @@ app.get('/resources/', function (req,res) {
 //List a resource
 app.get('/resources/:id', function (req, res) {
     var resid = req.params.id;
-    
+
     if(!isNaN(resid)){
         db.collection('switches').find({id: parseInt(resid)}).toArray().then(function (docs) {
             console.log(docs);
@@ -89,13 +92,13 @@ app.get('/resources/:id', function (req, res) {
         });
     }
     else{
-        res.status(400).send(resid + ' NaN\n');        
-    }    
+        res.status(400).send(resid + ' NaN\n');
+    }
 });
 
 //TODO Replace entire collection
 app.put('/resources/', function (req, res) {
-    res.send('Replace entire collection');   
+    res.send('Replace entire collection');
 });
 
 //TODO Replace a resource
@@ -109,8 +112,8 @@ app.put('/resources/:id', function (req, res) {
         res.send('Replace member ' + id + '\n');
     }
     else{
-        res.status(400).send('id ' + id + ' NaN\n');        
-    }   
+        res.status(400).send('id ' + id + ' NaN\n');
+    }
 });
 
 //Create a new resource in the collection
@@ -118,18 +121,18 @@ app.post('/resources/', function (req, res) {
     db.collection('switches').insert(req.body).then(function (docs){
         console.log(docs);
         res.send(docs.ops);
-    });    
+    });
 });
 
 //Not used, create a collection inside resource
 app.post('/resources/:id', function (req, res) {
-    res.status(400).send('Functionality not used\n');   
+    res.status(400).send('Functionality not used\n');
 });
 
 //Not used, delete entire collection
 app.delete('/resources/', function (req, res) {
     res.status(400).send('Functionality not used\n');
-   
+
 });
 
 //Delete resource
@@ -140,12 +143,12 @@ app.delete('/resources/:id', function (req, res) {
         db.collection('switches').remove({id:parseInt(resid)}).then(function (docs){
             console.log(docs.result);
             res.send(docs.result);
-        }); 
+        });
     }
     else{
-        res.status(400).send('id ' + id + ' NaN\n');        
+        res.status(400).send('id ' + id + ' NaN\n');
     }
-   
+
 });
 
 
@@ -173,7 +176,7 @@ app.delete('/resources/:id', function (req, res) {
 //                     //console.log(result.connection);
 //                 }
 //             });
-    
+
 //             //Close connection
 //             db.close();
 //         }
