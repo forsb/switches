@@ -33,42 +33,36 @@ int main() {
     printf("minimajs");
     fflush(stdout);*/
 
-	radio.begin();
-	radio.enableDynamicPayloads();
-	radio.setAutoAck(1);
-	radio.setRetries(15,15);
-	radio.setDataRate(RF24_250KBPS);
-	radio.setPALevel(RF24_PA_MAX);
-	radio.setChannel(76);
-	radio.setCRCLength(RF24_CRC_8);
+    radio.begin();
+    radio.enableDynamicPayloads();
+    radio.setAutoAck(1);
+    radio.setRetries(15,15);
+    radio.setDataRate(RF24_250KBPS);
+    radio.setPALevel(RF24_PA_MAX);
+    radio.setChannel(76);
+    radio.setCRCLength(RF24_CRC_8);
 
-	radio.openReadingPipe(1,piper);
+    radio.openReadingPipe(1,piper);
     radio.startListening();
 
-	radio.printDetails();
+    radio.printDetails();
 
-	//SensorPayload receivePayload;
-	//char receivePayload[10];
+    //SensorPayload receivePayload;
+    //char receivePayload[10];
     while(1){
-		if (radio.available()) {
-			radio.read(&message, sizeof(message));
-		    uint8_t* sensorId = &message[0];
-		    uint16_t* packageCount = (uint16_t*) &message[1];
-		    int16_t* temp = (int16_t*) &message[3];
-		    int16_t* humid = (int16_t*) &message[5];
-		    uint16_t* blinkCount = (uint16_t*) &message[7];
-			
-			/*uint8_t sensorId = message[0];
-			int16_t packageCount = (message[1] << 8) | message[2];
-			int16_t temp = (message[3] << 8) | message[4];
-			int16_t humid = (message[5] << 8) | message[6];
-			int16_t blinkCount = (message[7] << 8) | message[8];
-*/
-			printf("Recv: payload number %u from %d \n", *packageCount ,*sensorId);
-			printf("temp: %d, humid: %d, blink: %d\n", *temp, *humid, *blinkCount);
-			fflush(stdout);
-			delay(10); //Delay after payload responded to, minimize RPi CPU time
-		}
+        if (radio.available()) {
+            radio.read(&message, sizeof(message));
+            uint8_t* sensorId = &message[0];
+            uint16_t* packageCount = (uint16_t*) &message[1];
+            int16_t* temp = (int16_t*) &message[3];
+            int16_t* humid = (int16_t*) &message[5];
+            uint16_t* blinkCount = (uint16_t*) &message[7];
+
+            printf("{\"sensorId\": %u, \"packageCount\": %u, \"temp\": %d, \"humidity\": %d, \"blinkCount\": %u}",
+                (unsigned int) sensorId, (unsigned int) packageCount, (int) temp, (int) humid, (unsigned int) blinkCount);
+            fflush(stdout);
+            delay(10); //Delay after payload responded to, minimize RPi CPU time
+        }
     }
 
     return 0;
