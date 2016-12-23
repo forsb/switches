@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Connect to the database before starting the application server.
 // mongodb.MongoClient.connect(dburl, function (err, database) {
-db.connect(dburl, function (err, database) {
+db.connect(dburl, function (err) {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -44,8 +44,10 @@ db.connect(dburl, function (err, database) {
         console.log('stdout: ' + data );
         data = '{"sensorId": 1, "packageCount": 1337, "temp": 23.40, "humidity": 87.60, "blinkCount": 1337}';
         output = JSON.parse(data);
-
-
+        //new Date(new Date().setHours(0,0,0,0))
+        selector = '{"sensorId": ' + output.sensorId + ', "timestamp_hour": new Date(new Date().setHours(0,0,0,0))}';
+        doc = '{$pushAll:{values:[{"temp": ' + output.temp + ', "humidity": ' + output.humidity + ', "blinkCount": ' + output.blinkCount + '}]} }';
+        db.update(selector, doc);
     });
 
     ls.stderr.on('data', function (data) {
@@ -54,6 +56,7 @@ db.connect(dburl, function (err, database) {
 
     ls.on('close', function (code) {
         console.log('child process exited with code ' + code);
+        process.exit(code);
     });
 
 
