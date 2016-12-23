@@ -19,6 +19,12 @@ Library for nRF24L01 taken from https://github.com/stanleyseow/RF24
 - Run the *index.js* with Node.js (something like *nodejs index.js*)
 
 ###Arduino
+All libraries for Arduino are provided in the sketch folder. Open the .ino file in the Arduino IDE and hit *upload*
+
+Libraries used are:
+- RF24 by TMRh20 (link:)
+- DHT
+- 
 To use the Arduino sketch, the RF24-library has to be installed. To do so, follow these steps:
 - Make sure to have the latest Arduino IDE installed
 - Go to *Sketch* -> *Include Library* -> *Manage Libraries*
