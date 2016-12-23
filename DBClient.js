@@ -1,12 +1,14 @@
 var mongodb = require('mongodb');
 
+// export the class
+module.exports = DBClient;
 
 // Constructor
 function DBClient(url){
     this.dburl = url;
 }
 
-function connect(url, callback){
+DBClient.prototype.connect = function(url, callback){
     mongodb.MongoClient.connect(url, function(err, database){
         this.db = database;
         callback(err, database);
@@ -23,7 +25,7 @@ function update(collection, keydoc, fielddoc){
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         } else {
-            // We are connected. 
+            // We are connected.
             console.log('Connection established to', this.dburl);
 
             // Get the documents collection
@@ -40,12 +42,9 @@ function update(collection, keydoc, fielddoc){
                     //console.log(result.connection);
                 }
             });
-    
+
             //Close connection
             this.db.close();
         }
     });
 }
-
-// export the class
-module.exports = DBClient;

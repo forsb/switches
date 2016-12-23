@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 //var mongodb = require('mongodb');
-var database = require('./database');
+var DBClient = require('./DBClient');
 var bodyParser = require('body-parser');
 var spawn = require('child_process').spawn;
 
@@ -11,12 +11,13 @@ var app = express();
 
 var dburl = 'mongodb://localhost:27017/homer';
 
-var db;
+console.log("apapapa");
+var db = new DBClient(dburl);
 
 //TODO:
 //Error handling
 
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Connect to the database before starting the application server.
 // mongodb.MongoClient.connect(dburl, function (err, database) {
-database.connect(dburl, function (err, database) {
+db.connect(dburl, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -37,12 +38,13 @@ database.connect(dburl, function (err, database) {
     console.log("Database connection ready");
 
     //Spawn rf listener
-    var ls = spawn('./rf/a.out', []);
+    var ls = spawn('pwd', []);
 
     ls.stdout.on('data', function (data) {
         console.log('stdout: ' + data );
         data = '{"sensorId": 1, "packageCount": 1337, "temp": 23.40, "humidity": 87.60, "blinkCount": 1337}';
-	      jsonResponse = json.parse(data);
+        output = JSON.parse(data);
+
 
     });
 
